@@ -1,5 +1,6 @@
-   .venv/
-   uploads/
-   *.db
-   .env
-   __pycache__/
+.venv/
+uploads/
+*.db
+.env
+__pycache__/
+tamper_backup.json

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block body %}
+<style>
+.tb{display:flex;justify-content:space-between;align-items:center;max-width:1050px;margin:0 auto;padding:18px 22px}
+.tb a{color:#c7d2fe;text-decoration:none;margin-left:20px}
+.lg{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;max-width:1050px;margin:0 auto;padding:20px 22px 40px}
+.lg h1{font-size:40px;line-height:1.12;margin:10px 0 12px}
+.lg h1 em{font-style:normal;background:linear-gradient(90deg,#818cf8,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pts{list-style:none;padding:0;margin:16px 0}
+.pts li{padding:5px 0 5px 28px;position:relative;color:#c7d2fe}
+.pts li::before{content:"\2713";position:absolute;left:0;top:5px;width:20px;height:20px;border-radius:50%;background:#14b8a6;color:#fff;font-size:12px;text-align:center;line-height:20px}
+.vault{animation:fl 4s ease-in-out infinite}
+.dial{transform-origin:60px 78px;animation:spin 12s linear infinite}
+.ch{display:flex;align-items:center;margin-top:22px}
+.bk{flex:1;background:rgba(99,102,241,.12);border:1px solid #34428a;border-radius:10px;padding:8px;font-size:12px;opacity:0;animation:pop .6s ease forwards;animation-delay:var(--d)}
+.bk b{display:block;color:#22d3ee}
+.lk{width:18px;height:3px;background:#22d3ee;opacity:0;animation:pop .6s ease forwards;animation-delay:var(--d)}
+.ac{background:rgba(12,20,50,.92);border:1px solid #2c3b7a;border-radius:18px;padding:28px;box-shadow:0 24px 60px rgba(0,0,0,.5);animation:slide .8s ease both}
+.pw{position:relative}
+.pw button{position:absolute;right:6px;top:6px;padding:6px 10px;font-size:12px}
+.lb{background:none;border:0;color:#5eead4;padding:0;font-size:14px;text-decoration:underline;cursor:pointer;box-shadow:none}
+.lb:hover{transform:none;box-shadow:none;background:none}
+@media(max-width:860px){.lg{grid-template-columns:1fr}.lg h1{font-size:30px}}
+</style>
+
+<div class="tb">
+  <a class="brandx" style="margin:0" href="/"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z" fill="#6366f1"/><rect x="8.5" y="11" width="7" height="5.5" rx="1" fill="#fff"/><path d="M9.8 11V9.6a2.2 2.2 0 014.4 0V11" stroke="#fff" stroke-width="1.5" fill="none"/></svg><span>TrustVault</span></a>
+  <div><button type="button" class="lb" data-open="m-how">How it works</button><a href="{{ url_for('register') }}">Register</a></div>
+</div>
+
+<div class="lg">
+  <div>
+    <svg class="vault" width="120" height="130" viewBox="0 0 120 130">
+      <rect x="10" y="20" width="100" height="100" rx="14" fill="#1e2a6b" stroke="#22d3ee" stroke-width="3"/>
+      <g class="dial"><circle cx="60" cy="78" r="26" fill="#0b1236" stroke="#22d3ee" stroke-width="3"/><path d="M60 56v12M60 88v12M38 78h12M70 78h12" stroke="#22d3ee" stroke-width="4" stroke-linecap="round"/></g>
+      <circle cx="60" cy="78" r="7" fill="#6366f1"/>
+      <rect x="40" y="2" width="14" height="18" rx="3" fill="#ef4444"/><rect x="62" y="6" width="14" height="14" rx="3" fill="#3b82f6"/>
+    </svg>
+    <h1>Share confidential documents. <em>Prove nothing was changed.</em></h1>
+    <p class="muted">TrustVault gives every file a private link with an expiry, a download limit, and an audit trail you can verify.</p>
+    <ul class="pts">
+      <li>Only the person you name can open a shared link</li>
+      <li>Links expire, run out, or can be revoked at any time</li>
+      <li>A hash-chained audit log exposes any edited record</li>
+    </ul>
+    <div class="ch">
+      <div class="bk" style="--d:.6s"><b>#1 register</b><code>a3f9c2</code></div><div class="lk" style="--d:1.1s"></div>
+      <div class="bk" style="--d:1.4s"><b>#2 upload</b><code>7c1e90</code></div><div class="lk" style="--d:1.9s"></div>
+      <div class="bk" style="--d:2.2s"><b>#3 share</b><code>e04b6d</code></div>
+    </div>
+    <p class="hint">Each record contains the hash of the one before it.</p>
+  </div>
+
+  <div class="ac">
+    <h2 style="font-size:22px;margin-bottom:4px">Welcome back</h2>
+    <p class="muted" style="margin-top:0">Log in to your secure vault</p>
+    <form method="post">
+      <label>Email</label>
+      <input type="email" name="email" required>
+      <label>Password</label>
+      <div class="pw"><input id="pw" type="password" name="password" required>
+        <button type="button" class="ghost" onclick="var i=document.getElementById('pw');i.type=i.type==='password'?'text':'password'">Show</button></div>
+      <button class="full" type="submit">Log in</button>
+    </form>
+    <p class="hint" style="text-align:center">New here? <a href="{{ url_for('register') }}">Create an account</a><br>
+    <button type="button" class="lb" data-open="m-forgot">Forgot password?</button></p>
+  </div>
+</div>
+
+<div class="mwrap" id="m-forgot"><div class="mbox">
+  <h3>Forgot your password?</h3>
+  <p class="muted">Password reset is not available in this version. You can register a new account with a different email.</p>
+  <div class="mact"><button type="button" data-close>OK</button></div>
+</div></div>
+{% endblock %}

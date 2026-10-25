@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Account</h1>
+<p class="muted">Your profile and security settings</p>
+
+<div class="dgrid">
+  <div>
+    <div class="card">
+      <h2>Profile</h2>
+      <div class="r2"><span>Email</span><b>{{ email }}</b></div>
+      <div class="r2"><span>Documents in your vault</span><b>{{ n_docs }}</b></div>
+      <div class="r2"><span>Share links created</span><b>{{ n_shares }}</b></div>
+      <div class="r2" style="border:0"><span>Audit events recorded</span><b>{{ n_events }}</b></div>
+    </div>
+
+    <div class="card">
+      <h2>Change password</h2>
+      <form method="post">
+        <label>Current password</label>
+        <input type="password" name="current" required>
+        <label>New password (at least 8 characters)</label>
+        <input type="password" name="new" required>
+        <button type="submit">Update password</button>
+      </form>
+      <p class="hint">Password changes are recorded in your audit log.</p>
+    </div>
+  </div>
+
+  <aside>
+    <div class="panel">
+      <h2>Your plan</h2>
+      <p style="margin:0 0 6px"><b>Free</b></p>
+      <p class="muted sm" style="margin:0">Paid plans and payments are not part of this version.</p>
+    </div>
+    <div class="panel">
+      <h2>Security</h2>
+      <div class="r2"><span>Password storage</span><b class="g">Salted hash</b></div>
+      <div class="r2"><span>Document access</span><b class="g">Owner-only</b></div>
+      <div class="r2" style="border:0"><span>Audit trail</span><b class="g">Hash-chained</b></div>
+    </div>
+  </aside>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block topsearch %}<div class="search"><span>&#128269;</span><input id="q" type="text" placeholder="Search your documents..." autocomplete="off"></div><div class="grow"></div>{% endblock %}
+{% block content %}
+<div class="dgrid"><div>
+<section class="welcome">
+  <div>
+    <h1>Welcome to <span class="grad">TrustVault</span></h1>
+    <p class="muted lead2">Trust, but verify. Every file is fingerprinted and every action is chained, so changes can't hide.</p>
+    <div class="row"><button type="button" data-open="m-upload">&#11014; Upload document</button><button type="button" class="ghost" data-open="m-how">&#9654; Learn more</button></div>
+    {% if v.ok %}<span class="pill g">&#9679; Chain intact &middot; {{ v.total }} events checked</span>{% else %}<span class="pill r">&#9679; Tampering detected near event {{ v.bad_id }}</span>{% endif %}
+  </div>
+  <svg class="art" viewBox="0 0 220 190" width="230" height="200">
+    <g class="f1"><rect x="14" y="10" width="36" height="44" rx="6" fill="#ef4444"/><text x="32" y="37" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">PDF</text></g>
+    <g class="f2"><rect x="150" y="4" width="36" height="44" rx="6" fill="#3b82f6"/><text x="168" y="31" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">DOC</text></g>
+    <g class="f3"><rect x="184" y="62" width="32" height="40" rx="6" fill="#22c55e"/><text x="200" y="86" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">IMG</text></g>
+    <rect x="45" y="62" width="130" height="112" rx="14" fill="#1e2a6b" stroke="{{ '#22c55e' if v.ok else '#ef4444' }}" stroke-width="3"/>
+    <g class="dial"><circle cx="110" cy="118" r="31" fill="#0b1236" stroke="#22d3ee" stroke-width="3"/><path d="M110 90v14M110 132v14M82 118h14M124 118h14" stroke="#22d3ee" stroke-width="4" stroke-linecap="round"/></g>
+    <circle cx="110" cy="118" r="9" fill="#6366f1"/>
+  </svg>
+</section>
+
+<h2 id="docs">Your documents</h2>
+{% if docs %}<div class="docs">
+{% for d in docs %}
+{% set ext = d.original_name.rsplit('.', 1)[-1]|lower %}
+{% set kind = 'pdf' if ext == 'pdf' else ('dcx' if ext == 'docx' else ('img' if ext in ['png', 'jpg', 'jpeg'] else 'txt')) %}
+<div class="doc" data-name="{{ d.original_name|lower }}">
+  <div class="ico {{ kind }}">{{ ext|upper }}</div>
+  <div class="dn" title="{{ d.original_name }}">{{ d.original_name }}</div>
+  <div class="muted sm">Uploaded {{ d.uploaded_at|dt }}</div>
+  <div class="pills"><span class="pill b">SHA-256 {{ d.sha256[:8] }}</span><span class="pill g">Owner-only</span></div>
+  <div class="acts"><a class="mini" href="{{ url_for('download', doc_id=d.id) }}">Download</a><a class="mini" href="{{ url_for('shares.share_page', doc_id=d.id) }}">Share</a></div>
+</div>
+{% endfor %}</div>
+{% else %}<div class="empty">Your vault is empty.<br><br><button type="button" data-open="m-upload">Upload your first document</button></div>{% endif %}
+
+<h2>Quick actions</h2>
+<div class="tiles">
+  <button type="button" class="tile t1" data-open="m-upload"><b>&#11014; Upload document</b><span>Add a file to your vault</span></button>
+    {% if docs %}
+  <a class="tile t2" href="{{ url_for('shares.share_page', doc_id=docs[0].id) }}"><b>&#128279; Share securely</b><span>Share your latest document</span></a>
+  {% else %}
+  <button type="button" class="tile t2" data-toast="Upload a document first, then you can share it."><b>&#128279; Share securely</b><span>Upload a document to start</span></button>
+  {% endif %}
+  <a class="tile t3" href="/audit"><b>&#9989; Verify chain</b><span>Re-check every audit record</span></a>
+  <button type="button" class="tile t4" data-open="m-how"><b>&#10067; How it works</b><span>A 30-second overview</span></button>
+</div></div>
+
+<aside>
+  <div class="panel"><h2>Security status</h2>
+    <div class="r2"><span>Audit chain</span><b class="{{ 'g' if v.ok else 'r' }}">{{ 'Intact' if v.ok else 'Tampered' }}</b></div>
+    <div class="r2"><span>Access control</span><b class="g">Owner-only</b></div>
+    <div class="r2"><span>Active share links</span><b>{{ v.active }}</b></div>
+    <div class="r2" style="border:0"><span>Fingerprinted files</span><b>{{ docs|length }}</b></div></div>
+  {% if v.chain %}<div class="panel"><h2>Live chain</h2>
+    <div class="cs">{% for c in v.chain %}<div class="cb"><b>#{{ c.id }}</b><code>{{ c.hash[:6] }}</code></div>{% if not loop.last %}<i></i>{% endif %}{% endfor %}</div>
+    <p class="hint">Each block carries the hash of the one before it. <a href="/audit">Verify all</a></p></div>{% endif %}
+  <div class="panel"><h2>Recent activity <a href="/audit" style="font-size:13px">View all</a></h2>
+    {% set names = {'upload':'You uploaded','download':'You downloaded','share_create':'You created a link for','share_revoke':'You revoked a link for','share_download':'You downloaded shared','login_ok':'You logged in','logout':'You logged out','register':'Account created','download_denied':'Blocked a download','login_failed':'Failed login attempt'} %}
+    {% for r in v.recent %}<div class="act"><i></i><div>{{ names.get(r.action, r.action) }}{% if r.action in ['upload','download','share_create','share_revoke','share_download'] %} {{ r.target }}{% endif %}<small>{{ r.ts|dt }}</small></div></div>
+    {% else %}<p class="muted sm">No activity yet.</p>{% endfor %}</div>
+  <div class="script">Secure today,<br>confident tomorrow.</div>
+</aside></div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth">
+  <h1>Shared document</h1>
+  <div class="card">
+    {% if problem %}
+      <h2 style="color:#b91c1c;">Can't open this link</h2>
+      <p>{{ problem }}</p>
+    {% else %}
+      <h2>{{ s.original_name }}</h2>
+      <p class="muted">Shared by {{ s.owner_email }}</p>
+      <p>Valid until {{ s.expires_at | dt }}.<br>
+      Downloads left: {{ s.max_views - s.views }}.</p>
+      <a class="btn" href="{{ url_for('shares.share_download', token=s.token) }}">Download</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

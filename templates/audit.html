@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Audit log</h1>
+<p class="muted">Every action is chained to the one before it with a SHA-256 hash.</p>
+
+{% if ok %}
+<div class="card" style="border-left:6px solid #16a34a;">
+  <h2 style="color:#15803d; margin-bottom:6px;">Chain intact</h2>
+  <p style="margin:0;">All {{ total }} recorded events were re-checked and none has been changed.</p>
+</div>
+{% else %}
+<div class="card" style="border-left:6px solid #dc2626;">
+  <h2 style="color:#b91c1c; margin-bottom:6px;">Tampering detected</h2>
+  <p style="margin:0;">Event {{ bad_id }} (or an earlier one) does not match its recorded hash.</p>
+</div>
+{% endif %}
+
+{% if head %}
+<div class="card">
+  <h2>Latest chain hash (event {{ head.id }})</h2>
+  <code style="word-break:break-all; font-size:13px;">{{ head.hash }}</code>
+  <p class="hint">Save this value somewhere else. If it changes in a way you
+  can't explain, or an event is missing, the log was altered.</p>
+</div>
+{% endif %}
+
+<div class="card">
+  <h2>Your activity</h2>
+  {% if rows %}
+  <table>
+    <tr><th>#</th><th>Time</th><th>Action</th><th>Target</th><th>Hash</th></tr>
+    {% for r in rows %}
+    <tr>
+      <td>{{ r.id }}</td>
+      <td>{{ r.ts | dt }}</td>
+      <td>{{ r.action }}</td>
+      <td>{{ r.target }}</td>
+      <td><code title="{{ r.hash }}">{{ r.hash[:10] }}...</code></td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="muted">No activity yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

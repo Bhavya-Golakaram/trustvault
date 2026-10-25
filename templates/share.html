@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Share "{{ doc.original_name }}"</h1>
+<p class="muted">Only the person with the email you enter can open the link, and only while it is valid.</p>
+
+{% if new_link %}
+<div class="card" style="border-left:6px solid #16a34a;">
+  <h2>Link created</h2>
+  <p>Send this link to <strong>{{ new_email }}</strong>:</p>
+  <code style="word-break:break-all; font-size:13px;">{{ new_link }}</code>
+    <p style="margin-top:14px;">
+    <button type="button" data-l="{{ new_link }}" onclick="navigator.clipboard.writeText(this.dataset.l);this.textContent='Copied'">Copy link</button>
+    <a class="btn ghost" style="background:transparent;border:1px solid #3b4a8a;" href="mailto:{{ new_email }}?subject={{ 'A document was shared with you on TrustVault'|urlencode }}&body={{ ('Log in to TrustVault with this email address, then open this link: ' ~ new_link)|urlencode }}">Open in my email app</a>
+        <a class="btn" style="background:#16a34a;" target="_blank" rel="noopener" href="https://wa.me/?text={{ ('A document was shared with you on TrustVault. Log in with ' ~ new_email ~ ' and open this link: ' ~ new_link)|urlencode }}">Share on WhatsApp</a>
+  </p>
+  <p class="hint">They must log in (or register) with that exact email before opening it.</p>
+</div>
+{% endif %}
+
+<div class="card">
+  <h2>Create a share link</h2>
+  <form method="post">
+    <label>Recipient's email</label>
+    <input type="email" name="recipient" required>
+    <label>Valid for</label>
+    <select name="hours" style="width:100%; padding:11px; margin-bottom:16px;">
+      <option value="1">1 hour</option>
+      <option value="24" selected>24 hours</option>
+      <option value="72">3 days</option>
+      <option value="168">7 days</option>
+    </select>
+    <label>Maximum downloads</label>
+    <select name="max_views" style="width:100%; padding:11px; margin-bottom:16px;">
+      <option value="1">1</option>
+      <option value="3" selected>3</option>
+      <option value="5">5</option>
+      <option value="10">10</option>
+    </select>
+    <button type="submit">Create link</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Existing links</h2>
+  {% if shares %}
+  <table>
+    <tr><th>Recipient</th><th>Expires</th><th>Downloads</th><th>Status</th><th></th></tr>
+    {% for s in shares %}
+    <tr>
+      <td>{{ s.email }}</td>
+      <td>{{ s.expires_at | dt }}</td>
+      <td>{{ s.views }} / {{ s.max_views }}</td>
+      <td>{{ s.status }}</td>
+      <td>
+        {% if s.status == "Active" %}
+        <form method="post" action="{{ url_for('shares.revoke', share_id=s.id) }}" style="margin:0;">
+          <button type="submit" style="padding:6px 12px; background:#dc2626;">Revoke</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="muted">No links yet.</p>
+  {% endif %}
+</div>
+<p><a href="{{ url_for('dashboard') }}">Back to my documents</a></p>
+{% endblock %}
