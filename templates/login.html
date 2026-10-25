@@ -20,6 +20,7 @@
 .pw button{position:absolute;right:6px;top:6px;padding:6px 10px;font-size:12px}
 .lb{background:none;border:0;color:#5eead4;padding:0;font-size:14px;text-decoration:underline;cursor:pointer;box-shadow:none}
 .lb:hover{transform:none;box-shadow:none;background:none}
+.fg{text-align:right;margin:-6px 0 16px;font-size:13px}
 @media(max-width:860px){.lg{grid-template-columns:1fr}.lg h1{font-size:30px}}
 </style>
 
@@ -60,16 +61,10 @@
       <label>Password</label>
       <div class="pw"><input id="pw" type="password" name="password" required>
         <button type="button" class="ghost" onclick="var i=document.getElementById('pw');i.type=i.type==='password'?'text':'password'">Show</button></div>
+      <div class="fg"><a href="/forgot">Forgot password?</a></div>
       <button class="full" type="submit">Log in</button>
     </form>
-    <p class="hint" style="text-align:center">New here? <a href="{{ url_for('register') }}">Create an account</a><br>
-    <button type="button" class="lb" data-open="m-forgot">Forgot password?</button></p>
+    <p class="hint" style="text-align:center">New here? <a href="{{ url_for('register') }}">Create an account</a></p>
   </div>
 </div>
-
-<div class="mwrap" id="m-forgot"><div class="mbox">
-  <h3>Forgot your password?</h3>
-  <p class="muted">Password reset is not available in this version. You can register a new account with a different email.</p>
-  <div class="mact"><button type="button" data-close>OK</button></div>
-</div></div>
 {% endblock %}

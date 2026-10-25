@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block body %}
+<div style="max-width:440px;margin:60px auto;padding:0 20px;">
+  <a class="brandx" href="/" style="margin-bottom:22px"><span>TrustVault</span></a>
+  <div class="card">
+    <h2>Reset your password</h2>
+    <p class="muted sm">Enter your email, the recovery code you saved from your Account page, and a new password.</p>
+    <form method="post">
+      <label>Email</label>
+      <input type="email" name="email" required>
+      <label>Recovery code</label>
+      <input type="text" name="code" placeholder="XXXX-XXXX-XXXX-XXXX" required autocomplete="off">
+      <label>New password (at least 8 characters)</label>
+      <input type="password" name="new" required>
+      <button class="full" type="submit">Reset password</button>
+    </form>
+    <p class="hint" style="text-align:center"><a href="{{ url_for('login') }}">Back to log in</a></p>
+    <p class="hint">No recovery code? Only accounts that created one can be reset. You can register a new account instead.</p>
+  </div>
+</div>
+{% endblock %}

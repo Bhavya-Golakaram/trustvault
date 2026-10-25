@@ -28,6 +28,8 @@ from ui import bp as ui_bp
 app.register_blueprint(ui_bp)
 from account import bp as account_bp
 app.register_blueprint(account_bp)
+from recovery import bp as recovery_bp
+app.register_blueprint(recovery_bp)
 from werkzeug.middleware.proxy_fix import ProxyFix
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Your recovery code</h1>
+<div class="card" style="border-top-color:#f59e0b;">
+  <p>Save this code now. It is shown <b>only once</b> and cannot be recovered.</p>
+  <p style="font-size:26px;letter-spacing:2px;"><code id="rc" style="font-size:24px;">{{ code }}</code></p>
+  <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('rc').textContent);this.textContent='Copied'">Copy code</button>
+  <p class="hint">Creating a new code later cancels this one. If you forget your password, use this code on the "Forgot password?" page.</p>
+</div>
+<p><a href="{{ url_for('account.account_page') }}">Back to Account</a></p>
+{% endblock %}
