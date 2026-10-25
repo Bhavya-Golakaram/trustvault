@@ -1,0 +1,33 @@
+CREATE TABLE IF NOT EXISTS users(
+  id INTEGER PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  pw_hash TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS documents(
+  id INTEGER PRIMARY KEY,
+  owner_id INTEGER NOT NULL,
+  original_name TEXT NOT NULL,
+  stored_name TEXT NOT NULL,
+  sha256 TEXT NOT NULL,
+  uploaded_at INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS shares(
+  id INTEGER PRIMARY KEY,
+  doc_id INTEGER NOT NULL,
+  token TEXT UNIQUE NOT NULL,
+  recipient_email TEXT NOT NULL,
+  expires_at INTEGER NOT NULL,
+  max_views INTEGER NOT NULL,
+  views INTEGER NOT NULL DEFAULT 0,
+  revoked INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS audit(
+  id INTEGER PRIMARY KEY,
+  ts INTEGER NOT NULL,
+  actor TEXT NOT NULL,
+  action TEXT NOT NULL,
+  target TEXT NOT NULL,
+  detail TEXT NOT NULL,
+  prev_hash TEXT NOT NULL,
+  hash TEXT NOT NULL
+);
